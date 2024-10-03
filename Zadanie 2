@@ -1,0 +1,75 @@
+#include <iostream> 
+using namespace std;
+/**
+*@brief функция нахождения пути 
+*@param  speed  -  скорость лодки 
+*@param  speed_river  - скорость реки
+*@param  t  - время
+*@return возвращает значение пути, пройденного лодкой
+*/
+double getS(const double speed, const double speed_river, const double t);
+/**
+*@brief - функция ввода значения с клавиатуры, прерывает программу в случае некорректного ввода
+*@return number - вводимое число
+*/
+int getNumber();
+/**
+*@brief - функция проверки вводимого значения скорости, прерывает программу в случае некорректного значения
+*@param  speed  - значение скорости 
+*/
+void checkSpeed(const double speed);
+/**
+*@brief - функция проверки вводимого значения времени, прерывает программу в случае некорректного значения
+*@param  t  - значение времени 
+*/
+void checkT(const double t);
+/**
+*@brief главная функция программы, находящая путь, пройденный лодкой
+*@return возвращает 0 в случае успеха, иначе 1
+*/
+int main() 
+{
+  cout << "enter the speed in standing water: " << endl;
+  double speed = getNumber();
+  checkSpeed(speed);
+  cout << "enter the speed of river: " << endl;
+  double speed_river = getNumber(); 
+  checkSpeed(speed_river);
+  cout << "enter the time: " << endl;
+  double t = getNumber();
+  checkT(t);
+  cout << "the distance is: " << getS(speed, speed_river, t) << endl;
+return 0;
+}
+
+int getNumber()
+{
+  int number;
+  cin >> number;
+  if (cin.fail())
+  {
+    cout<<"incorrect input"<<endl;
+    abort();
+  }
+  return number;
+}
+void checkSpeed(const double speed)
+{
+  if(speed<0 )
+   {
+   cout << "incorrect speed" << endl;
+   abort();
+  }
+
+}
+ void checkT(const double t)
+ {
+     if (t<=0) {
+        cout << "incorrect time" << endl;
+        abort(); 
+     }
+ }
+ double getS(const double speed, const double speed_river, const double t)
+{
+  return speed * t + speed_river * t;
+}
