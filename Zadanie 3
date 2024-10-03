@@ -1,0 +1,56 @@
+#include <iostream>
+using namespace std;
+/**
+*@brief - функция ввода значения с клавиатуры, прерывает программу в случае некорректного ввода
+*/
+int getNumber();
+/**
+*@brief функция проверки
+*@param plotLength - длинна участка
+*@param plotWidth - ширина участка
+*@param houseLength1 - длинна дома 1 
+*@param plotWidth - ширина дома 1
+*@param houseLength2 - длнина дома 2
+*@param plotWidth - ширина дома 2
+*@return - true - если участок подходит для постройки домa
+*/
+bool CheckSqure(const int plotLength,const int plotWidth,const int houseLength1,const int houseWidth1,const int houseLength2,const int houseWidth2);
+/**
+*@brief - главная функция программы
+*@return 0 - в случае успеха
+*/
+int main() {
+    int plotLength, plotWidth, houseLength1, houseWidth1, houseLength2, houseWidth2;
+    cout << "Введите размеры участка (длинна и ширина): ";
+    plotLength = getNumber(); 
+    plotWidth = getNumber();
+    cout << "Введите размеры первого дома (длинна и ширина): ";
+    houseLength1 = getNumber();
+    houseWidth1 = getNumber();
+    cout << "Введите размеры второго дома (длинна и ширина): ";
+    houseLength2 = getNumber();
+    houseWidth2 = getNumber();
+    
+    if (CheckSqure(plotLength, plotWidth, houseLength1, houseWidth1, houseLength2, houseWidth2)) {
+        cout << "Два дома можно разместить на участке" << endl;
+        } else {
+            cout << "Два дома нельзя разместить на участке" << endl;
+      }
+    return 0;
+}
+
+int getNumber()
+{
+  int number;
+  cin >> number;
+  if (cin.fail() || number <= 0)
+  {
+    cout<<"incorrect input"<<endl;
+    abort();
+  }
+  return number;
+}
+
+bool CheckSqure(const int plotLength,const int plotWidth,const int houseLength1,const int houseWidth1,const int houseLength2,const int houseWidth2){
+  return ((houseLength1 + houseLength2 <= plotLength && max(houseWidth1, houseWidth2) <= plotWidth) || (houseWidth1 + houseWidth2 <= plotWidth && max(houseLength1, houseLength2) <= plotLength));
+}
