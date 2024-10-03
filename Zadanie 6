@@ -1,0 +1,236 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+/**
+*@brief - функция вывода элементов массива
+*@param arr - массив 
+*/
+void printArray(const vector<int> &arr);
+
+/**
+*@brief - функция ввода значения с клавиатуры, прерывает программу в случае некорректного ввода
+*/
+int getNumber();
+
+/**
+*@brief - оператор выбора способа заполнения массива 
+*@param RANDOM = 0 - заполнение массива случайными числами
+*@param MANUALLY = 1 - заполнение массива вручную
+*/
+enum SELECT {
+    RANDOM = 0,
+    MANUALLY = 1
+};
+
+/**
+*@brief - функция для получения размера массива
+*@return - размер массива
+*/
+size_t getSize();
+
+/**
+*@brief - функция для заполнения массива случайными числами
+*@param arr - массив
+*@param n - размер массива
+*@param min - минимальное значение элемента массива     
+*@param max - максимальное значение элемента массива
+*/
+void fillArrayRandom(vector<int> &arr, const int min, const int max);
+
+/**
+*@brief - функция для заполнения массива с клавиатуры
+*@param arr - массив
+*@param n - размер массива
+*@param min - минимальное значение элемента массива     
+*@param max - максимальное значение элемента массива
+*/
+void fillArrayManually(vector<int> &arr, const int min, const int max);
+
+/**
+*@brief - функция для нахождения суммы элементов, значения которых состоят из одной цифры
+*@param arr - массив
+*/
+int findSumSingleDigitElements(const vector<int> arr);
+
+/**
+*@brief - функция для замены элементов массива между минимальным и максимальным на элементы в обратном порядке
+*@param arr - массив
+*/
+void replaceElementsWithReverse(vector<int> &arr);
+
+/**
+*@brief - функция для нахождения номера последней пары соседних элементов с одинаковыми знаками, произведение которых меньше заданного числа
+*@param arr - массив
+*@param num - число
+*/
+int findLastPairIndex(const vector<int> arr, const int num);
+
+/**
+*@brief - функция проверки интервала
+*@param min - начальное значение интервала
+*@param max - конечное значение интервала
+*/
+void checkint(const int min, const int max);
+
+/**
+*@brief - главная функция программы
+*@return - возвращает 0 в случае успеха
+*/
+int main() {
+    cout << "Enter size of array: ";
+    int n = getSize();
+
+    vector<int> arr(n);
+
+    cout << "Enter your choice to fill the array: " << endl << RANDOM << " - to fill array randomly" << endl << MANUALLY << " - to fill array manually" << endl;
+    int choice = getNumber();
+    cout << "Enter min and max value of array: ";
+    int min = getNumber();
+    int max = getNumber();
+    checkint(min, max);
+    switch((enum SELECT) choice) {
+        case 0:
+            fillArrayRandom(arr, min, max);
+            cout << "Array filled with random numbers." << endl;
+            cout << "Array before transformations: ";
+            printArray(arr);
+            cout << endl;
+            break;
+        case 1:
+            fillArrayManually(arr, min, max);
+            cout << "Array before transformations:";
+            printArray(arr);
+            cout << endl;
+            break;
+        default:
+            cout << "Your choice is wrong" << endl;
+            return 1;
+            break;
+    }
+
+    int sumSingleDigit = findSumSingleDigitElements(arr);
+    cout << "Sum of single digit elements: " << sumSingleDigit << endl;
+
+
+    vector<int> arr2(n);
+    copy(arr.begin(), arr.end(), arr2.begin());
+    
+    replaceElementsWithReverse(arr2);
+    cout << "Array after replacing elements: ";
+    printArray(arr2);
+    cout << endl;
+
+    cout << "Enter the number for finding the last pair: ";
+    int num = getNumber();
+    int lastPairIndex = findLastPairIndex(arr, num);
+    if(lastPairIndex != -1) {
+        cout << "Index of the last pair with product less than " << num << ": " << lastPairIndex << endl;
+    } else {
+        cout << "No such pair found." << endl;
+    }
+
+    return 0;
+}
+
+void printArray(const vector<int> &arr) {
+    for(size_t i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+}
+
+size_t getSize() {
+    int size;
+    cin >> size;
+    if (size <= 0) {
+        cout << "incorrect size" << endl;
+        abort();
+    }
+    return (size_t) size;
+}
+
+void fillArrayRandom(vector<int> &arr, const int min, const int max) {
+    srand(time(0));
+    for(size_t i = 0; i < arr.size(); i++) {
+        arr[i] = rand() % (max - min + 1) + min;
+    }
+}
+
+void fillArrayManually(vector<int> &arr, const int min, const int max) {
+    for(size_t i = 0; i < arr.size(); i++) {
+        cout << "Enter element " << i+1 << ": ";
+        int num = getNumber();
+        if(num >= min && num <= max) {
+            arr[i] = num;
+        } else {
+            cout << "Incorrect value. Please enter a number between " << min << " and " << max << endl;
+            i--;
+        }
+    }
+}
+
+int findSumSingleDigitElements(const vector<int> arr) {
+    int sum = 0;
+    for(int element : arr) {
+        if(abs(element) < 10) {
+            sum += element;
+        }
+    }
+    return sum;
+}
+
+void replaceElementsWithReverse(vector<int> &arr) {
+    int minIndex = 0, maxIndex = 0;
+    int min = arr[0], max = arr[0];
+
+    for(size_t i = 0; i < arr.size(); i++) {
+        if(arr[i] < min) {
+            min = arr[i];
+            minIndex = i;
+        }
+        if(arr[i] > max) {
+            max = arr[i];
+            maxIndex = i;
+        }
+    }
+
+    int start = minIndex < maxIndex ? minIndex : maxIndex;
+    int end = minIndex > maxIndex ? minIndex : maxIndex;
+
+    while(start < end) {
+        int temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+int findLastPairIndex(const vector<int> arr, const int num) {
+    int index = -1;
+    for(size_t i = 0; i < arr.size() - 1; i++) {
+        if(arr[i] * arr[i+1] < num && arr[i] * arr[i+1] >= 0) {
+            index = i;
+        }
+    }
+    return index;
+}
+
+int getNumber() {
+    double number;
+    cin >> number;
+    if (cin.fail()) {
+        cout << "incorrect input" << endl;
+        abort();
+    }
+    return number;
+}
+
+void checkint(const int min, const int max) {
+    if ((min > max) || (min == max)) {
+        cout << "Error" << endl;
+        abort();
+    }
+}
